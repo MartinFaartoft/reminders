@@ -20,13 +20,13 @@ namespace Reminders.ConsoleSender
                 .ConfigureServices((context, services) =>
             {
                 services.AddTransient<IReminderReportSender, EmailReminderReportSender>();
-                services.AddTransient<IReminderRepository, CsvFileReminderRepository>();
+                services.AddSingleton<IReminderRepository>(new CsvFileReminderRepository(context.Configuration["REMINDERS_CSV_URL"]));
                 services.AddTransient<ReminderService>();
             }).Build();
 
             var reminderService = host.Services.GetService<ReminderService>();
             var sender = host.Services.GetService<IReminderReportSender>();
-            var report = reminderService.GenerateReport(DateTime.Today, DateTime.Today.AddDays(7));
+            var report = reminderService.GenerateReport(DateTime.Today, DateTime.Today.AddDays(90));
             await sender.SendReminderReportAsync(report);
         }
     }
