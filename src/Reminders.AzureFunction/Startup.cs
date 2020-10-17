@@ -15,7 +15,7 @@ namespace Reminders.CronFunction
         {
             var config = new ConfigurationBuilder()
                 .SetBasePath(Environment.CurrentDirectory)
-               .AddJsonFile("local.settings.json", optional: false, reloadOnChange: true)
+               .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
                .AddEnvironmentVariables()
                .Build();
 

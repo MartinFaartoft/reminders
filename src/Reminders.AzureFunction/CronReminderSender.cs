@@ -1,9 +1,10 @@
 using System;
+using System.Linq;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Reminders.Domain;
 
-namespace Reminders.CronFunction
+namespace Reminders.AzureFunction
 {
     public class CronReminderSender
     {
@@ -16,13 +17,15 @@ namespace Reminders.CronFunction
             _sender = sender;
         }
 
-        [FunctionName("CronReminderSender")] // Every Sunday at 20:00
-        public void Run([TimerTrigger("0 20 * * 0")]TimerInfo timer, ILogger log)
+        [FunctionName("CronReminderSender")] // Sundays at 20:00
+        public void Run([TimerTrigger("0 0 20 * * 0")]TimerInfo reminderTimer, ILogger log)
         {
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            log.LogInformation($"C# CronReminderSender function executed at: {DateTime.Now}");
 
-            var report = _reminderService.GenerateReport(DateTime.Today, DateTime.Today.AddDays(90));
+            var report = _reminderService.GenerateReport(DateTime.Today, DateTime.Today.AddDays(30));
             _sender.SendReminderReportAsync(report);
+
+            log.LogInformation($"Done executing, found {report.Reminders.Count()} reminders");
         }
     }
 }
