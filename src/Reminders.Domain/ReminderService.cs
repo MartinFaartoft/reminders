@@ -2,7 +2,7 @@
 
 namespace Reminders.Domain
 {
-    public class ReminderService
+    public class ReminderService : IReminderService
     {
         private readonly IReminderRepository _reminderRepository;
         private readonly ReminderFilterer _reminderFilterer = new ReminderFilterer();
